@@ -15,11 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.logout = exports.viewUsers = exports.signIn = exports.signUp = void 0;
 const user_1 = __importDefault(require("../models/user"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+// Función para generar Tokens para control de sesión
 function token(user) {
     return jsonwebtoken_1.default.sign({ id: user.id, email: user.email }, "secretword", {
         expiresIn: 86400
     });
 }
+// Controlador para Registrarte
 const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body.email || !req.body.name || !req.body.lastName || !req.body.password) {
         return res.status(400).json({ msg: "Por favor, ingrese todos los datos." });
@@ -34,6 +36,7 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     return res.status(201).json(newUser);
 });
 exports.signUp = signUp;
+// Controlador para inicio de sesion
 const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body.email || !req.body.name || !req.body.lastName || !req.body.password) {
         return res.status(400).json({ msg: "Por favor, ingrese todos los datos." });
@@ -53,11 +56,13 @@ const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     });
 });
 exports.signIn = signIn;
+// Controlador para enviar todos los usuarios
 const viewUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield user_1.default.find();
     res.status(200).json(users);
 });
 exports.viewUsers = viewUsers;
+// Controlador para cerrar sesión
 const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // Configuración para logout
 });
