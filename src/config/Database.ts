@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
 import { config } from "./Config";
+import { Server } from "./Server";
+
+const server = new Server();
 
 const connectDB = function () {
   mongoose
@@ -9,6 +12,7 @@ const connectDB = function () {
     })
     .then(() => {
       console.log("Conectado a la base de datos");
+      server.start();
     })
     .catch((error) => {
       console.log(error);

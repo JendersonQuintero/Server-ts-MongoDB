@@ -1,5 +1,9 @@
-import express, { Application, Router } from 'express';
-import { router } from './Routes';
+import express, { Application } from 'express';
+import cors from 'cors';
+import morgan from 'morgan';
+import passport from 'passport';
+import passportMiddleware from '../middlewares/passport';
+import router from './Routes';
 
 export class Server {
     public app: Application;
@@ -10,33 +14,14 @@ export class Server {
     }
 
     config(): void {
-        this.app.set('port', process.env.PORT || 3000);
-        this.app.use(router);
-        this.app.use(express.urlencoded({ extended: true }));
         this.app.use(express.json());
-        this.app.use((req, res, next) => {
-            res.header("Access-Control-Allow-Origin", "*");
-            res.header(
-              "Access-Control-Allow-Headers",
-              "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-            );
-        
-            if (req.method == "OPTIONS") {
-              res.header(
-                "Access-Control-Allow-Methods",
-                "PUT, POST, PATCH, DELETE, GET"
-              );
-              return res.status(200).json({});
-            }
-            next();
-          });
-        
-          this.app.use((req, res) => {
-            const error = new Error("not found");
-        
-            return res.status(400).json({ message: error.message });
-          });
-
+        this.app.use(express.urlencoded({ extended: true }));
+        this.app.use(morgan('dev'));
+        this.app.use(cors());
+        this.app.use(router);
+        this.app.use(passport.initialize());
+        passport.use(passportMiddleware);
+        this.app.set('port', process.env.PORT || 3000);
     }
 
     start(): void {
