@@ -46,3 +46,12 @@ export const signIn = async (req: Request, res: Response) => {
         msg: "El correo o la contraseña son incorrectas"
     });
 }
+
+export const viewUsers = async (req: Request, res: Response) => {
+    const users = await user.find();
+    res.status(200).json(users);
+}
+
+export const logout = async (req: Request, res: Response) => {
+    // Configuración para logout
+}
